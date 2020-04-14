@@ -28,15 +28,33 @@ const covid19ImpactEstimator = (data = inputData) => {
 
   const outputData = { data, impact: {}, severeImpact: {} };
 
+  let period = data.periodType;
+  let time = data.timeToElapse;
+
   // Estimate the number of currently infected persons
   outputData.impact = { currentlyInfected: data.reportedCases * 10 };
   outputData.severeImpact = { currentlyInfected: data.reportedCases * 50 };
 
   // Projected number of infections after 58 days
   // We take 19 sets of 3 days, plus (2/3) person infected per day
-  const numberOfInfections = (infected, period = 58) => (
-    (infected * (2 ** Math.floor(period / 3))) + Math.ceil((period % 3) * (2 / 3))
-  );
+  const numberOfInfections = (infected, period = 'days', time = 58) => {
+    let factor;
+
+    if (period === 'days') {
+      // Daily
+      factor = 1;
+    } 
+    else if (period === 'weeks') {
+      // Weekly
+      factor = 2.5;
+    }
+    else {
+      // Monthly
+      factor = 10;     
+    }
+    
+    return (infected * (2 ** factor));
+  };
 
   // Estimate number of infected people, 58 days from now
   Object.assign(outputData.impact, {
