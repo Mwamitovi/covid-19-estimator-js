@@ -34,8 +34,9 @@ const covid19ImpactEstimator = (data = inputData) => {
 
   // Projected number of infections after 58 days
   // We take 19 sets of 3 days, plus (2/3) person infected per day
-  const numberOfInfections = (infected, period=58) => 
-    ((infected * Math.pow(2, Math.floor(period/3))) + Math.ceil((period%3)*(2/3)));
+  const numberOfInfections = (infected, period = 58) => (
+    (infected * (2 ** Math.floor(period / 3))) + Math.ceil((period % 3) * (2 / 3))
+  );
 
   // Estimate number of infected people, 58 days from now
   Object.assign(outputData.impact, {
