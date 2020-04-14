@@ -32,6 +32,15 @@ const covid19ImpactEstimator = (data = inputData) => {
 	outputData.impact = { currentlyInfected: data.reportedCases * 10 };
 	outputData.severeImpact = { currentlyInfected: data.reportedCases * 50 };
 
+	// Estimate number of infected people, 30 days from now
+	Object.assign(outputData.impact, {
+		infectionsByRequestedTime: outputData.impact.currentlyInfected * 1024
+	});
+
+	Object.assign(outputData.severeImpact, {
+		infectionsByRequestedTime: outputData.severeImpact.currentlyInfected * 1024
+	});
+
 	return outputData;
 };
 
