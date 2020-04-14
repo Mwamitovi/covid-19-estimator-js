@@ -41,6 +41,15 @@ const covid19ImpactEstimator = (data = inputData) => {
     infectionsByRequestedTime: outputData.severeImpact.currentlyInfected * 1024
   });
 
+  // Estimate number of severe positive cases that need hospitalization to recover
+  Object.assign(outputData.impact, {
+    severeCasesByRequestedTime: outputData.impact.infectionsByRequestedTime * 0.15
+  });
+
+  Object.assign(outputData.severeImpact, {
+    severeCasesByRequestedTime: outputData.severeImpact.infectionsByRequestedTime * 0.15
+  });
+
   return outputData;
 };
 
