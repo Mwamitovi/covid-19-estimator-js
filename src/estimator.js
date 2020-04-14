@@ -50,6 +50,17 @@ const covid19ImpactEstimator = (data = inputData) => {
     severeCasesByRequestedTime: outputData.severeImpact.infectionsByRequestedTime * 0.15
   });
 
+  const availableBeds = (param) => (Math.floor((data.totalHospitalBeds * 0.35) - param));
+
+  // Estimate number of available beds for severe COVID-19 patients
+  Object.assign(outputData.impact, {
+    hospitalBedsByRequestedTime: availableBeds(outputData.impact.severeCasesByRequestedTime)
+  });
+
+  Object.assign(outputData.severeImpact, {
+    hospitalBedsByRequestedTime: availableBeds(outputData.severeImpact.severeCasesByRequestedTime)
+  });
+
   return outputData;
 };
 
