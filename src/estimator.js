@@ -32,22 +32,27 @@ const covid19ImpactEstimator = (data = inputData) => {
   outputData.impact = { currentlyInfected: data.reportedCases * 10 };
   outputData.severeImpact = { currentlyInfected: data.reportedCases * 50 };
 
-  // Estimate number of infected people, 30 days from now
+  // Projected number of infections after 58 days
+  // We take 19 sets of 3 days, plus (2/3) person infected per day
+  const numberOfInfections = (infected, period=58) => 
+    ((infected * Math.pow(2, Math.floor(period/3))) + Math.ceil((period%3)*(2/3)));
+
+  // Estimate number of infected people, 58 days from now
   Object.assign(outputData.impact, {
-    infectionsByRequestedTime: outputData.impact.currentlyInfected * 1024
+    infectionsByRequestedTime: numberOfInfections(outputData.impact.currentlyInfected)
   });
 
   Object.assign(outputData.severeImpact, {
-    infectionsByRequestedTime: outputData.severeImpact.currentlyInfected * 1024
+    infectionsByRequestedTime: numberOfInfections(outputData.severeImpact.currentlyInfected)
   });
 
   // Estimate number of severe positive cases that need hospitalization to recover
   Object.assign(outputData.impact, {
-    severeCasesByRequestedTime: outputData.impact.infectionsByRequestedTime * 0.15
+    severeCasesByRequestedTime: Math.floor(outputData.impact.infectionsByRequestedTime * 0.15)
   });
 
   Object.assign(outputData.severeImpact, {
-    severeCasesByRequestedTime: outputData.severeImpact.infectionsByRequestedTime * 0.15
+    severeCasesByRequestedTime: Math.floor(outputData.severeImpact.infectionsByRequestedTime * 0.15)
   });
 
   const availableBeds = (param) => (Math.floor((data.totalHospitalBeds * 0.35) - param));
