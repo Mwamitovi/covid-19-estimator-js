@@ -28,9 +28,6 @@ const covid19ImpactEstimator = (data = inputData) => {
 
   const outputData = { data, impact: {}, severeImpact: {} };
 
-  let period = data.periodType;
-  let time = data.timeToElapse;
-
   // Estimate the number of currently infected persons
   outputData.impact = { currentlyInfected: data.reportedCases * 10 };
   outputData.severeImpact = { currentlyInfected: data.reportedCases * 50 };
@@ -43,17 +40,15 @@ const covid19ImpactEstimator = (data = inputData) => {
     if (period === 'days') {
       // Daily
       factor = 1;
-    } 
-    else if (period === 'weeks') {
+    } else if (period === 'weeks') {
       // Weekly
       factor = 2.5;
-    }
-    else {
+    } else {
       // Monthly
-      factor = 10;     
+      factor = 10;
     }
-    
-    return (infected * (2 ** factor));
+
+    return (infected * (time * (2 ** factor)));
   };
 
   // Estimate number of infected people, 58 days from now
